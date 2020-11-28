@@ -36,7 +36,6 @@ def add(c):
   global freq
   global isWord
   global word
-  print(c)
   if c in tree[node]:
     node = tree[node][c]
     isWord[node] += 1
@@ -47,7 +46,6 @@ def add(c):
     isWord.append(1)
     tree.append({})
   word += c
-  find(node, word)
   return
 
 @app.route('/')
@@ -60,12 +58,23 @@ def my_form_post():
   global node
   global word
   global valWord
+  global isWord
   text = request.form['input']
   processed_text = text.upper()
   print(tree)
   for c in processed_text:
-    print(c)
     add(c)
+  isWord[node] = True
+  valWord.clear()
+  find(node, word)
   node = 0
   word = ""
+  valWord.sort(reverse = True)
+  print("val word")
+  i = 0
+  for w in valWord:
+    if i == 0: 
+      break;
+    print(i[0], i[1])
+    i -= 1
   return processed_text
