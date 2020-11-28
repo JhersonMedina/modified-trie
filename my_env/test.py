@@ -3,7 +3,6 @@ from flask import Flask, request, render_template
 app = Flask(__name__)
 
 #Modified Prefix Structure for Natural Language Processing
-#Modified Prefix Structure for Natural Language Processing
 
 #-------------GLOBAL VARIABLES------------------------------------------------------------
 node = 0 #Number of nodes, the root node is node 0
