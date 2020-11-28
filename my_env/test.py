@@ -7,10 +7,13 @@ app = Flask(__name__)
 #-------------GLOBAL VARIABLES------------------------------------------------------------
 node = 0 #Number of nodes, the root node is node 0
 tree = [] #Tree itself
-valWord = [] #Set of the most frequent valid words
+valWord = {} #Set of the most frequent valid words
 freq = [] #Frecuency of Node i
 isWord = [] #Boolean value set true if the current node is a complete word
 word = "" #Current word that it's written
+#Words that predicts
+words = [None] * 5
+
 tree.append({})
 freq.append(1)
 isWord.append(False)
@@ -24,7 +27,7 @@ def find(curnode, curword):
   global tree
   global freq
   if isWord[curnode]:
-    valWord.append({freq[curnode], curword})
+    valWord[curword] = freq[curnode]
   for c in tree[curnode]:
     find(tree[curnode][c], curword + c)
   return
@@ -46,7 +49,7 @@ def add(newWord):
 
 @app.route('/')
 def index():
-  return render_template('index.html')
+  return render_template('index.html', word1 = words[0], word2 = words[1], word3 = words[2], word4 = words[3], word5 = words[4])
 
 @app.route('/', methods=['POST'])
 def my_form_post():
@@ -65,4 +68,10 @@ def my_form_post():
   node = 0
   word = ""
   print(valWord)
-  return processed_text
+  swords = sorted(valWord.items(), key=lambda x: x[1], reverse = True)
+  i = 0
+  for c in swords:
+    if i >= 5: break
+    words[i] = c[0]
+    i += 1
+  return render_template('index.html', word1 = words[0], word2 = words[1], word3 = words[2], word4 = words[3], word5 = words[4])
