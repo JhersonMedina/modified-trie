@@ -21,32 +21,28 @@ isWord.append(False)
 def find(curnode, curword):
   global isWord
   global valWord
-  global Tree
-  global freq
-  if isWord[curnode]:
-    valWord.append({freq[curnode], curnode})
-  else:
-    for c in tree[curnode]:
-      find(i[1], curword + i[0])
-  return
-#Updates the 'word' by appending 'c' to the end, and searches for new valid words
-def add(c):
-  global node
   global tree
   global freq
-  global isWord
-  global word
-  if c in tree[node]:
-    node = tree[node][c]
-    isWord[node] += 1
-  else:
-    tree[node][c] = node + 1
-    node += 1
-    freq.append(1)
-    isWord.append(1)
-    tree.append({})
-  word += c
+  if isWord[curnode]:
+    valWord.append({freq[curnode], curword})
+  for c in tree[curnode]:
+    find(tree[curnode][c], curword + c)
   return
+#Updates the 'word' by appending 'c' to the end, and searches for new valid words
+def add(newWord):
+  global tree
+  global freq
+  cur = 0
+  for c in newWord:
+    if c in tree[cur]:
+      cur = tree[cur][c]
+    else:
+      tree[cur][c] = cur + 1
+      cur += 1
+      tree.append({})
+      freq.append(1)
+      isWord.append(False)
+  return cur
 
 @app.route('/')
 def index():
@@ -61,20 +57,12 @@ def my_form_post():
   global isWord
   text = request.form['input']
   processed_text = text.upper()
-  print(tree)
-  for c in processed_text:
-    add(c)
-  isWord[node] = True
+  newNode = add(processed_text)
+  isWord[newNode] = True
+  freq[newNode] += 1
   valWord.clear()
-  find(node, word)
+  find(newNode, processed_text)
   node = 0
   word = ""
-  valWord.sort(reverse = True)
-  print("val word")
-  i = 0
-  for w in valWord:
-    if i == 0: 
-      break;
-    print(i[0], i[1])
-    i -= 1
+  print(valWord)
   return processed_text
