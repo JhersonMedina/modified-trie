@@ -1,3 +1,3 @@
 # modified-trie
- Modified prefix tree structure for natural language processing
+ Modified prefix tree structure for natural language prediction
 
