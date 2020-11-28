@@ -11,6 +11,7 @@ valWord = {} #Set of the most frequent valid words
 freq = [] #Frecuency of Node i
 isWord = [] #Boolean value set true if the current node is a complete word
 word = "" #Current word that it's written
+done = {None} 
 #Words that predicts
 words = [None] * 5
 
@@ -27,7 +28,9 @@ def find(curnode, curword):
   global tree
   global freq
   if isWord[curnode]:
+    print(curnode, curword, isWord[curnode])
     valWord[curword] = freq[curnode]
+    print(curnode, curword)
   for c in tree[curnode]:
     find(tree[curnode][c], curword + c)
   return
@@ -62,6 +65,7 @@ def my_form_post():
   processed_text = text.upper()
   newNode = add(processed_text)
   isWord[newNode] = True
+  done.add(processed_text)
   freq[newNode] += 1
   valWord.clear()
   find(newNode, processed_text)
@@ -72,6 +76,10 @@ def my_form_post():
   i = 0
   for c in swords:
     if i >= 5: break
-    words[i] = c[0]
+    if c[0] in done:
+      words[i] = c[0]
+    i += 1
+  while i < 5:
+    words[i] = None 
     i += 1
   return render_template('index.html', word1 = words[0], word2 = words[1], word3 = words[2], word4 = words[3], word5 = words[4])
